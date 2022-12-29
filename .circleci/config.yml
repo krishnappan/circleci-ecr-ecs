@@ -10,6 +10,7 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - run: echo "hello world" # run the `echo` command
+      - run: echo $DOCKER_HUB_USER
 
 workflows:
   my-workflow:
@@ -17,3 +18,4 @@ workflows:
       - hello-job:
           context:
             - DOCKERHUB
+            - AWS
