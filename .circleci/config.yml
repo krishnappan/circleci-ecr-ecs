@@ -18,11 +18,12 @@ jobs:
       - run: sudo yum install -y yum-utils
       - run: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
       #- run: sudo mkdir /sys/fs/cgroup/systemd
+      - run: --security=insecure sudo mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd
       #- run: sudo mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/systemd
       - run: sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
       #- run: sudo yum install httpd -y
       #- run: sudo systemctl start httpd
-      #- run: sudo systemctl start docker
+      - run: sudo systemctl start docker
       #- run: sudo service docker start
       #- run: sudo service docker start
       - run: docker image ls
