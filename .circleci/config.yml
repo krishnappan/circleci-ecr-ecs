@@ -10,6 +10,8 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - run: echo "hello world" # run the `echo` command
+      - run: apt update && apt upgrade
+      - run: apt install sudo
       ##- run: echo $DOCKER_HUB_USER
       ##- run: yum install sudo -y
       ##- run: sudo yum update -y
