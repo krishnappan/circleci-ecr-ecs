@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   hello-job:
     docker:
-      - image: alpine:latest #cimg/node:17.2.0 # the primary container, where your job's commands are run
+      - image: centos7.9.2009 #alpine:latest #cimg/node:17.2.0 # the primary container, where your job's commands are run
         auth:
           username: $DOCKER_HUB_USER
           password: $DOCKER_HUB_PASSWORD_ENV #$DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -11,10 +11,16 @@ jobs:
       - checkout # check out the code in the project directory
       - run: echo "hello world" # run the `echo` command
       - run: echo $DOCKER_HUB_USER
-      - run: apk add sudo
-      - run: sudo apt-get update
-      - run: sudo apt-get install ca-certificates curl gnupg lsb-release #Update the apt package index and install packages to allow apt to use a repository over HTTPS:
-      - run: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+      - run: sudo yum update
+      - run: sudo yum install -y yum-utils
+      - run: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      - run: sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+      - run: sudo systemctl start docker
+      - run: curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+      - run: unzip awscliv2.zip
+      - run: sudo ./aws/install
+
+
 
 
 
