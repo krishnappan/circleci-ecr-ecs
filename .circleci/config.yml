@@ -11,6 +11,7 @@ jobs:
       - checkout # check out the code in the project directory
       - run: echo "hello world" # run the `echo` command
       - run: echo $DOCKER_HUB_USER
+      - run: yum install sudo -y
       - run: sudo yum update
       - run: sudo yum install -y yum-utils
       - run: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
