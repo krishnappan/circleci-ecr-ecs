@@ -31,7 +31,7 @@ resource "aws_ecs_task_definition" "ecr-repo" {
   [
     {
       "name": "ecr-repo-task",
-      "image": "${aws_ecr_repository.ecr-repo.repository_url}",
+      "image": "${aws_ecr_repository.ecr-repo.repository_url}:17ba413b5915b9fa56ad2cf83626549f775374f4",
       "essential": true,
       "portMappings": [
         {
@@ -72,10 +72,32 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_ecs_service" "my_first_service" {
-  name            = "my-first-service"                             # Naming our first service
+resource "aws_ecs_service" "ecr-repo" {
+  name            = "ecr-repo-service"                             # Naming our first service
   cluster         = "${aws_ecs_cluster.ecr-repo.id}"             # Referencing our created Cluster
-  task_definition = "${aws_ecs_task_definition.ecr-repo-task.arn}" # Referencing the task our service will spin up
+  task_definition = "${aws_ecs_task_definition.ecr-repo.arn}" # Referencing the task our service will spin up
   launch_type     = "FARGATE"
   desired_count   = 3 # Setting the number of containers we want deployed to 3
+
+  network_configuration {
+    subnets          = ["${aws_default_subnet.default_subnet_a.id}", "${aws_default_subnet.default_subnet_b.id}", "${aws_default_subnet.default_subnet_c.id}"]
+    assign_public_ip = true # Providing our containers with public IPs
+  }
+}
+
+# Providing a reference to our default VPC
+resource "aws_default_vpc" "default_vpc" {
+}
+
+# Providing a reference to our default subnets
+resource "aws_default_subnet" "default_subnet_a" {
+  availability_zone = "us-west-2a"
+}
+
+resource "aws_default_subnet" "default_subnet_b" {
+  availability_zone = "us-west-2b"
+}
+
+resource "aws_default_subnet" "default_subnet_c" {
+  availability_zone = "us-west-2c"
 }
